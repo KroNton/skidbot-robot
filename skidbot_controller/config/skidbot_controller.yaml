@@ -1,0 +1,68 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
+    use_sim_time: true
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    skidbot_diff_drive_controller:
+      type: diff_drive_controller/DiffDriveController
+
+
+skidbot_diff_drive_controller:
+  ros__parameters:
+    use_stamped_vel: false
+
+    # 4-wheel skid-steer: list both left wheels and both right wheels
+    left_wheel_names:  ['front_left_wheel_joint',  'rear_left_wheel_joint']
+    right_wheel_names: ['front_right_wheel_joint', 'rear_right_wheel_joint']
+
+    wheel_separation: 0.45   # track width (m)
+    wheel_radius:     0.08   # wheel radius (m)
+
+    wheel_separation_multiplier:  1.0
+    left_wheel_radius_multiplier:  1.0
+    right_wheel_radius_multiplier: 1.0
+
+    publish_rate: 50.0
+
+    pose_covariance_diagonal:  [0.001, 0.001, 1.0e-3, 1.0e-3, 1.0e-3, 0.01]
+    twist_covariance_diagonal: [0.001, 0.001, 1.0e-3, 1.0e-3, 1.0e-3, 0.01]
+
+    # Velocity commands timeout [s]
+    cmd_vel_timeout: 0.5
+
+    # Base frame
+    base_frame_id: base_link
+
+    # Publish odometry TF (set false if using robot_localization EKF)
+    enable_odom_tf: false
+
+    # Publish limited velocity
+    publish_limited_velocity: true
+
+    # Publish wheel data
+    publish_wheel_data: true
+
+    # Velocity and acceleration limits
+    linear:
+      x:
+        has_velocity_limits:     true
+        max_velocity:            1.0   # m/s
+        min_velocity:           -1.0   # m/s
+        has_acceleration_limits: true
+        max_acceleration:        1.0   # m/s^2
+        min_acceleration:       -1.0   # m/s^2
+        has_jerk_limits:         false
+        max_jerk:                5.0   # m/s^3
+    angular:
+      z:
+        has_velocity_limits:     true
+        max_velocity:            4.0   # rad/s
+        min_velocity:           -4.0   # rad/s
+        has_acceleration_limits: true
+        max_acceleration:        3.0   # rad/s^2
+        min_acceleration:       -3.0   # rad/s^2
+        has_jerk_limits:         false
+        max_jerk:                2.5   # rad/s^3
