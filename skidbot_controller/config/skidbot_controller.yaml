@@ -6,11 +6,11 @@ controller_manager:
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
-    skidbot_diff_drive_controller:
+    skidbot_controller:
       type: diff_drive_controller/DiffDriveController
 
 
-skidbot_diff_drive_controller:
+skidbot_controller:
   ros__parameters:
     use_stamped_vel: false
 
@@ -34,10 +34,10 @@ skidbot_diff_drive_controller:
     cmd_vel_timeout: 0.5
 
     # Base frame
-    base_frame_id: base_link
+    base_frame_id: base_footprint
 
     # Publish odometry TF (set false if using robot_localization EKF)
-    enable_odom_tf: false
+    enable_odom_tf: true
 
     # Publish limited velocity
     publish_limited_velocity: true
