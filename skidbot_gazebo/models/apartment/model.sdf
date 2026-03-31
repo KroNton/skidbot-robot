@@ -1,0 +1,337 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="apartment_blue_walls">
+    <link name="apartment_base">
+      
+      <collision name="floor_collision">
+        <geometry>
+          <box>
+            <size>12 8 0.1</size>
+          </box>
+        </geometry>
+        <pose>0 0 0 0 0 0</pose>
+      </collision>
+      <visual name="floor_visual">
+        <geometry>
+          <box>
+            <size>12 8 0.1</size>
+          </box>
+        </geometry>
+        <pose>0 0 0 0 0 0</pose>
+        <material>
+          <ambient>0.9 0.9 0.8 1</ambient> <diffuse>0.9 0.9 0.8 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+
+      <collision name="north_wall_collision">
+        <geometry>
+          <box>
+            <size>10 0.2 2.5</size>
+          </box>
+        </geometry>
+        <pose>1 4 1.25 0 0 0</pose>
+      </collision>
+      <visual name="north_wall_visual">
+        <geometry>
+          <box>
+            <size>10 0.2 2.5</size>
+          </box>
+        </geometry>
+        <pose>1 4 1.25 0 0 0</pose>
+        <material>
+          <ambient>0.1 0.1 0.8 1</ambient>
+          <diffuse>0.1 0.1 0.8 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+          </material>
+      </visual>
+
+      <collision name="south_wall_collision">
+        <geometry>
+          <box>
+            <size>10 0.2 2.5</size>
+          </box>
+        </geometry>
+        <pose>1 -4 1.25 0 0 0</pose>
+      </collision>
+      <visual name="south_wall_visual">
+        <geometry>
+          <box>
+            <size>10 0.2 2.5</size>
+          </box>
+        </geometry>
+        <pose>1 -4 1.25 0 0 0</pose>
+        <material>
+          <ambient>0.1 0.1 0.8 1</ambient>
+          <diffuse>0.1 0.1 0.8 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+
+      <collision name="east_wall_collision">
+        <geometry>
+          <box>
+            <size>0.2 8.2 2.5</size>
+          </box>
+        </geometry>
+        <pose>6 0 1.25 0 0 0</pose>
+      </collision>
+      <visual name="east_wall_visual">
+        <geometry>
+          <box>
+            <size>0.2 8.2 2.5</size>
+          </box>
+        </geometry>
+        <pose>6 0 1.25 0 0 0</pose>
+        <material>
+          <ambient>0.1 0.1 0.8 1</ambient>
+          <diffuse>0.1 0.1 0.8 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+
+      <collision name="balcony_north_wall_collision">
+        <geometry>
+          <box>
+            <size>2.0 0.2 2.5</size>
+          </box>
+        </geometry>
+        <pose>-5 4 1.25 0 0 0</pose>
+      </collision>
+      <visual name="balcony_north_wall_visual">
+        <geometry>
+          <box>
+            <size>2.0 0.2 2.5</size>
+          </box>
+        </geometry>
+        <pose>-5 4 1.25 0 0 0</pose>
+        <material>
+          <ambient>0.1 0.1 0.8 1</ambient>
+          <diffuse>0.1 0.1 0.8 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+
+      <collision name="balcony_south_wall_collision">
+        <geometry>
+          <box>
+            <size>2.0 0.2 2.5</size>
+          </box>
+        </geometry>
+        <pose>-5 -4 1.25 0 0 0</pose>
+      </collision>
+      <visual name="balcony_south_wall_visual">
+        <geometry>
+          <box>
+            <size>2.0 0.2 2.5</size>
+          </box>
+        </geometry>
+        <pose>-5 -4 1.25 0 0 0</pose>
+        <material>
+          <ambient>0.1 0.1 0.8 1</ambient>
+          <diffuse>0.1 0.1 0.8 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+
+      <collision name="balcony_sep_top">
+        <geometry>
+          <box>
+            <size>0.2 3.0 2.5</size>
+          </box>
+        </geometry>
+        <pose>-4 2.5 1.25 0 0 0</pose>
+      </collision>
+      <visual name="balcony_sep_top_vis">
+        <geometry>
+          <box>
+            <size>0.2 3.0 2.5</size>
+          </box>
+        </geometry>
+        <pose>-4 2.5 1.25 0 0 0</pose>
+        <material>
+          <ambient>0.1 0.1 0.8 1</ambient>
+          <diffuse>0.1 0.1 0.8 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+
+      <collision name="balcony_sep_bottom">
+        <geometry>
+          <box>
+            <size>0.2 3.0 2.5</size>
+          </box>
+        </geometry>
+        <pose>-4 -2.5 1.25 0 0 0</pose>
+      </collision>
+      <visual name="balcony_sep_bottom_vis">
+        <geometry>
+          <box>
+            <size>0.2 3.0 2.5</size>
+          </box>
+        </geometry>
+        <pose>-4 -2.5 1.25 0 0 0</pose>
+        <material>
+          <ambient>0.1 0.1 0.8 1</ambient>
+          <diffuse>0.1 0.1 0.8 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+
+      <collision name="balcony_railing">
+        <geometry>
+          <box>
+            <size>0.1 8.0 1.0</size>
+          </box>
+        </geometry>
+        <pose>-6 0 0.5 0 0 0</pose>
+      </collision>
+      <visual name="balcony_railing_vis">
+        <geometry>
+          <box>
+            <size>0.1 8.0 1.0</size>
+          </box>
+        </geometry>
+        <pose>-6 0 0.5 0 0 0</pose>
+        <material>
+          <ambient>0.2 0.2 0.2 1</ambient>
+          <diffuse>0.2 0.2 0.2 1</diffuse>
+        </material>
+      </visual>
+
+      <collision name="spine_top_collision">
+        <geometry>
+          <box>
+            <size>0.2 3.0 2.5</size>
+          </box>
+        </geometry>
+        <pose>2 2.5 1.25 0 0 0</pose>
+      </collision>
+      <visual name="spine_top_visual">
+        <geometry>
+          <box>
+            <size>0.2 3.0 2.5</size>
+          </box>
+        </geometry>
+        <pose>2 2.5 1.25 0 0 0</pose>
+        <material>
+          <ambient>0.1 0.1 0.8 1</ambient>
+          <diffuse>0.1 0.1 0.8 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+
+      <collision name="spine_bottom_collision">
+        <geometry>
+          <box>
+            <size>0.2 3.0 2.5</size>
+          </box>
+        </geometry>
+        <pose>2 -2.5 1.25 0 0 0</pose>
+      </collision>
+      <visual name="spine_bottom_visual">
+        <geometry>
+          <box>
+            <size>0.2 3.0 2.5</size>
+          </box>
+        </geometry>
+        <pose>2 -2.5 1.25 0 0 0</pose>
+        <material>
+          <ambient>0.1 0.1 0.8 1</ambient>
+          <diffuse>0.1 0.1 0.8 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+
+      <collision name="bath_door_frame_1">
+        <geometry>
+          <box>
+            <size>0.5 0.2 2.5</size>
+          </box>
+        </geometry>
+        <pose>2.25 1.0 1.25 0 0 0</pose>
+      </collision>
+      <visual name="bath_door_frame_1_vis">
+        <geometry>
+          <box>
+            <size>0.5 0.2 2.5</size>
+          </box>
+        </geometry>
+        <pose>2.25 1.0 1.25 0 0 0</pose>
+        <material>
+          <ambient>0.1 0.1 0.8 1</ambient>
+          <diffuse>0.1 0.1 0.8 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+
+      <collision name="bath_door_frame_2">
+        <geometry>
+          <box>
+            <size>2.5 0.2 2.5</size>
+          </box>
+        </geometry>
+        <pose>4.75 1.0 1.25 0 0 0</pose>
+      </collision>
+      <visual name="bath_door_frame_2_vis">
+        <geometry>
+          <box>
+            <size>2.5 0.2 2.5</size>
+          </box>
+        </geometry>
+        <pose>4.75 1.0 1.25 0 0 0</pose>
+        <material>
+          <ambient>0.1 0.1 0.8 1</ambient>
+          <diffuse>0.1 0.1 0.8 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+
+      <collision name="bed_door_frame_1">
+        <geometry>
+          <box>
+            <size>0.5 0.2 2.5</size>
+          </box>
+        </geometry>
+        <pose>2.25 -1.0 1.25 0 0 0</pose>
+      </collision>
+      <visual name="bed_door_frame_1_vis">
+        <geometry>
+          <box>
+            <size>0.5 0.2 2.5</size>
+          </box>
+        </geometry>
+        <pose>2.25 -1.0 1.25 0 0 0</pose>
+        <material>
+          <ambient>0.1 0.1 0.8 1</ambient>
+          <diffuse>0.1 0.1 0.8 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+
+      <collision name="bed_door_frame_2">
+        <geometry>
+          <box>
+            <size>2.5 0.2 2.5</size>
+          </box>
+        </geometry>
+        <pose>4.75 -1.0 1.25 0 0 0</pose>
+      </collision>
+      <visual name="bed_door_frame_2_vis">
+        <geometry>
+          <box>
+            <size>2.5 0.2 2.5</size>
+          </box>
+        </geometry>
+        <pose>4.75 -1.0 1.25 0 0 0</pose>
+        <material>
+          <ambient>0.1 0.1 0.8 1</ambient>
+          <diffuse>0.1 0.1 0.8 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+
+    </link>
+    <static>true</static>
+  </model>
+</sdf>
