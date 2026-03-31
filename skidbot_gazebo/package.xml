@@ -3,18 +3,19 @@
 <package format="3">
   <name>skidbot_gazebo</name>
   <version>0.0.0</version>
-  <description>Skidbot Gazebo simulation launch and world files</description>
+  <description>Skidbot gazebo Worlds</description>
   <maintainer email="root@todo.todo">root</maintainer>
   <license>Apache License 2.0</license>
 
-  <depend>skidbot_description</depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <test_depend>ament_copyright</test_depend>
-  <test_depend>ament_flake8</test_depend>
-  <test_depend>ament_pep257</test_depend>
-  <test_depend>python3-pytest</test_depend>
+  <depend>geometry_msgs</depend>
+  <depend>rclpy</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
 
   <export>
-    <build_type>ament_python</build_type>
+    <build_type>ament_cmake</build_type>
   </export>
 </package>
