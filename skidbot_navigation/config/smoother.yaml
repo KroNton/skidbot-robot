@@ -1,0 +1,19 @@
+smoother_server:
+  ros__parameters:
+    use_sim_time: True
+    
+    # List of smoother plugins to load. You can have multiple and switch between them.
+    smoother_plugins: ["SavitzkyGolaySmoother"]
+
+    # Configuration for the Savitzky-Golay smoother plugin
+    SavitzkyGolaySmoother:
+      # Specifies the plugin C++ class to be loaded
+      plugin: "nav2_smoother::SavitzkyGolaySmoother"
+      
+      # The number of points to use in the smoothing window. Must be an odd number.
+      # A larger window size creates a smoother path but deviates more from the original.
+      window_size: 11
+      
+      # The order of the polynomial to fit to the data. 
+      # Usually between 2 and 4.
+      polynomial_order: 4
