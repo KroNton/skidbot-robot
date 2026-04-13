@@ -11,12 +11,14 @@ find_package(rclpy REQUIRED)
 
 install(PROGRAMS
   scripts/twist_to_twist_stamped.py
+  scripts/planner_benchmark.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
 install(DIRECTORY
   config
   launch
+  behavior_tree
   DESTINATION share/${PROJECT_NAME}
 )
 

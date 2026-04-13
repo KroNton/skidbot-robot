@@ -1,59 +1,55 @@
 from launch import LaunchDescription
-from launch_ros.actions import Node
-from launch.actions import TimerAction
-import os
 from ament_index_python.packages import get_package_share_directory
+from launch.actions import IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+import launch_ros.actions
+import os
+import launch.actions
 
-# Paths to configuration files
-nav2_yaml = os.path.join(get_package_share_directory('beetlebot_localization'), 'config', 'beetlebot_amcl.yaml')
-map_file = os.path.join(get_package_share_directory('beetlebot_localization'), 'map', 'home_map.yaml')
-rviz_config = os.path.join(get_package_share_directory('beetlebot_localization'), 'config', 'beetlebot_amcl.rviz')
 
 def generate_launch_description():
-    # Define the RViz node
-    rviz_node = Node(
-        package='rviz2',
-        executable='rviz2',
-        name='rviz2',
-        arguments=['-d', rviz_config],
-        output='screen'
+    gps_wpf_dir = get_package_share_directory(
+        "skidbot_localization")
+    rl_params_file = os.path.join(
+        gps_wpf_dir, "config", "dual_ekf_navsat_params.yaml")
+
+    return LaunchDescription(
+        [
+            launch.actions.DeclareLaunchArgument(
+                "output_final_position", default_value="false"
+            ),
+            launch.actions.DeclareLaunchArgument(
+                "output_location", default_value="~/dual_ekf_navsat_example_debug.txt"
+            ),
+            launch_ros.actions.Node(
+                package="robot_localization",
+                executable="ekf_node",
+                name="ekf_filter_node_odom",
+                output="screen",
+                parameters=[rl_params_file, {"use_sim_time": True}],
+                remappings=[("odometry/filtered", "odometry/local")],
+            ),
+            launch_ros.actions.Node(
+                package="robot_localization",
+                executable="ekf_node",
+                name="ekf_filter_node_map",
+                output="screen",
+                parameters=[rl_params_file, {"use_sim_time": True}],
+                remappings=[("odometry/filtered", "odometry/global")],
+            ),
+            launch_ros.actions.Node(
+                package="robot_localization",
+                executable="navsat_transform_node",
+                name="navsat_transform",
+                output="screen",
+                parameters=[rl_params_file, {"use_sim_time": True}],
+                remappings=[
+                    ("imu/data", "imu/data"),
+                    ("gps/fix", "gps/fix"),
+                    ("gps/filtered", "gps/filtered"),
+                    ("odometry/gps", "odometry/gps"),
+                    ("odometry/filtered", "odometry/global"),
+                ],
+            ),
+        ]
     )
-
-    # Define the map server node
-    map_server_node = Node(
-        package='nav2_map_server',
-        executable='map_server',
-        name='map_server',
-        output='screen',
-        parameters=[{'use_sim_time': True}, 
-                   {'yaml_filename': map_file}]
-    )
-
-    # Define the AMCL node
-    amcl_node = Node(
-        package='nav2_amcl',
-        executable='amcl',
-        name='amcl',
-        output='screen',
-        parameters=[nav2_yaml]
-    )
-
-    # Define the lifecycle manager node
-    lifecycle_manager_node = Node(
-        package='nav2_lifecycle_manager',
-        executable='lifecycle_manager',
-        name='lifecycle_manager_localization',
-        output='screen',
-        parameters=[{'use_sim_time': True},
-                    {'autostart': True},
-                    {'node_names': ['map_server', 'amcl']}]
-    )
-
-
-    # Add everything to the LaunchDescription
-    return LaunchDescription([
-        map_server_node,
-        amcl_node,
-        lifecycle_manager_node,
-        # rviz_node, 
-    ])
