@@ -37,7 +37,7 @@ skidbot_controller:
     base_frame_id: base_footprint
 
     # Publish odometry TF (set false if using robot_localization EKF)
-    enable_odom_tf: true
+    enable_odom_tf: false
 
     # Publish limited velocity
     publish_limited_velocity: true

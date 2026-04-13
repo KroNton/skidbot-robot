@@ -22,12 +22,12 @@ displays:
       visible: true
       collapsed: false
       custom_sources:
-        - base_url: https://tiles.stadiamaps.com/tiles/alidade_satellite/{level}/{x}/{y}.png?api_key=api_key
-          max_zoom: 15
-          name: Stadia (alidade_satellite)
+        - base_url: https://tile.openstreetmap.org/{level}/{x}/{y}.png
+          max_zoom: 19
+          name: OpenStreetMap
           type: wmts
       bing_api_key: ""
-      source: Stadia (alidade_satellite)
+      source: OpenStreetMap
   - type: mapviz_plugins/point_click_publisher
     name: new display
     config:
@@ -52,7 +52,7 @@ displays:
     config:
       visible: true
       collapsed: false
-      topic: /gps/fix
+      topic: /navsat
       color: "#55aaff"
       draw_style: points
       position_tolerance: 0

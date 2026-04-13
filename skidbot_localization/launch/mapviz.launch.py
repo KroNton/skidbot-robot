@@ -15,14 +15,15 @@ def generate_launch_description():
             package="mapviz",
             executable="mapviz",
             name="mapviz",
-            parameters=[{"config": mapviz_config_file}]
+            parameters=[{"config": mapviz_config_file, "use_sim_time": True}]
         ),
         launch_ros.actions.Node(
             package="swri_transform_util",
             executable="initialize_origin.py",
             name="initialize_origin",
+            parameters=[{"use_sim_time": True}],
             remappings=[
-                ("fix", "gps/fix"),
+                ("fix", "navsat"),
             ],
         ),
         launch_ros.actions.Node(
