@@ -1,276 +1,462 @@
-<?xml version='1.0' encoding='utf-8'?>
-<robot name="skidbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<?xml version="1.0" encoding="utf-8"?>
+
+<robot name="ELM4-Chassis" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <xacro:include filename="$(find skidbot_description)/urdf/skidbot.gazebo" />
     <xacro:include filename="$(find skidbot_description)/urdf/skidbot_ros2_control.xacro" />
 
-    <!-- Base Footprint (virtual ground frame) -->
-    <link name="base_footprint"/>
 
-    <joint name="footprint_joint" type="fixed">
-        <parent link="base_footprint"/>
-        <child link="base_link"/>
-        <origin xyz="0 0 0.155" rpy="0 0 0"/>
-    </joint>
+  <link name="base_footprint"/>
 
-    <!-- Base Link (chassis 0.60 x 0.40 x 0.15 m, 15 kg) -->
-    <link name="base_link">
-        <visual>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <box size="0.60 0.40 0.15"/>
-            </geometry>
-            <material name="chassis_material">
-                <color rgba="0.2 0.2 0.8 1"/>
-            </material>
-        </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <box size="0.60 0.40 0.15"/>
-            </geometry>
-        </collision>
-        <inertial>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <mass value="15.0"/>
-            <!-- Box inertia: Ixx=m/12*(y^2+z^2), Iyy=m/12*(x^2+z^2), Izz=m/12*(x^2+y^2) -->
-            <inertia ixx="0.2281" ixy="0" ixz="0"
-                     iyy="0.4781" iyz="0"
-                     izz="0.6500"/>
-        </inertial>
-    </link>
+  <joint name="footprint_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child  link="base_link"/>
+    <origin xyz="0 0 0.154" rpy="0 0 0"/>
+  </joint>
 
-    <!-- ===================== WHEELS ===================== -->
-    <!-- Wheel cylinder axis is along Z in its own frame.
-         Joint rpy="pi/2 0 0" rotates the frame so the cylinder length
-         aligns with the global Y axis (track direction). -->
 
-    <!-- Front Left Wheel -->
-    <link name="front_left_wheel">
-        <visual>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <cylinder radius="0.08" length="0.05"/>
-            </geometry>
-            <material name="wheel_material">
-                <color rgba="0.1 0.1 0.1 1"/>
-            </material>
-        </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <cylinder radius="0.08" length="0.05"/>
-            </geometry>
-        </collision>
-        <inertial>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <mass value="1.0"/>
-            <!-- Cylinder inertia: Ixx=Iyy=m/12*(3r^2+l^2), Izz=m/2*r^2 -->
-            <inertia ixx="0.001808" ixy="0" ixz="0"
-                     iyy="0.001808" iyz="0"
-                     izz="0.003200"/>
-        </inertial>
-    </link>
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="18.71"/>
+      <inertia ixx="0.3986" ixy="0"      ixz="0"
+               iyy="1.092"  iyz="0"
+               izz="1.337"/>
+    </inertial>
 
-    <joint name="front_left_wheel_joint" type="continuous">
-        <parent link="base_link"/>
-        <child link="front_left_wheel"/>
-        <origin xyz="0.20 0.225 -0.075" rpy="1.5707963267948966 0 0"/>
-        <axis xyz="0 0 -1"/>
-    </joint>
 
-    <!-- Front Right Wheel -->
-    <link name="front_right_wheel">
-        <visual>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <cylinder radius="0.08" length="0.05"/>
-            </geometry>
-            <material name="wheel_material">
-                <color rgba="0.1 0.1 0.1 1"/>
-            </material>
-        </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <cylinder radius="0.08" length="0.05"/>
-            </geometry>
-        </collision>
-        <inertial>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <mass value="1.0"/>
-            <inertia ixx="0.001808" ixy="0" ixz="0"
-                     iyy="0.001808" iyz="0"
-                     izz="0.003200"/>
-        </inertial>
-    </link>
+    <collision>
+      <origin xyz="0 0 0.0875" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.8 0.389 0.171"/>
+      </geometry>
+    </collision>
 
-    <joint name="front_right_wheel_joint" type="continuous">
-        <parent link="base_link"/>
-        <child link="front_right_wheel"/>
-        <origin xyz="0.20 -0.225 -0.075" rpy="1.5707963267948966 0 0"/>
-        <axis xyz="0 0 -1"/>
-    </joint>
 
-    <!-- Rear Left Wheel -->
-    <link name="rear_left_wheel">
-        <visual>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <cylinder radius="0.08" length="0.05"/>
-            </geometry>
-            <material name="wheel_material">
-                <color rgba="0.1 0.1 0.1 1"/>
-            </material>
-        </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <cylinder radius="0.08" length="0.05"/>
-            </geometry>
-        </collision>
-        <inertial>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <mass value="1.0"/>
-            <inertia ixx="0.001808" ixy="0" ixz="0"
-                     iyy="0.001808" iyz="0"
-                     izz="0.003200"/>
-        </inertial>
-    </link>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://skidbot_description/meshes/BaseMetal.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
 
-    <joint name="rear_left_wheel_joint" type="continuous">
-        <parent link="base_link"/>
-        <child link="rear_left_wheel"/>
-        <origin xyz="-0.20 0.225 -0.075" rpy="1.5707963267948966 0 0"/>
-        <axis xyz="0 0 -1"/>
-    </joint>
 
-    <!-- Rear Right Wheel -->
-    <link name="rear_right_wheel">
-        <visual>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <cylinder radius="0.08" length="0.05"/>
-            </geometry>
-            <material name="wheel_material">
-                <color rgba="0.1 0.1 0.1 1"/>
-            </material>
-        </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <cylinder radius="0.08" length="0.05"/>
-            </geometry>
-        </collision>
-        <inertial>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <mass value="1.0"/>
-            <inertia ixx="0.001808" ixy="0" ixz="0"
-                     iyy="0.001808" iyz="0"
-                     izz="0.003200"/>
-        </inertial>
-    </link>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://skidbot_description/meshes/BaseRubber.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
 
-    <joint name="rear_right_wheel_joint" type="continuous">
-        <parent link="base_link"/>
-        <child link="rear_right_wheel"/>
-        <origin xyz="-0.20 -0.225 -0.075" rpy="1.5707963267948966 0 0"/>
-        <axis xyz="0 0 -1"/>
-    </joint>
 
-    <!-- ===================== IMU ===================== -->
-    <link name="imu_link">
-        <visual>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <box size="0.05 0.05 0.05"/>
-            </geometry>
-            <material name="imu_material">
-                <color rgba="0.0 0.8 0.0 1"/>
-            </material>
-        </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <box size="0.05 0.05 0.05"/>
-            </geometry>
-        </collision>
-        <inertial>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <mass value="0.1"/>
-            <inertia ixx="0.000042" ixy="0" ixz="0"
-                     iyy="0.000042" iyz="0"
-                     izz="0.000042"/>
-        </inertial>
-    </link>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://skidbot_description/meshes/BasePlastic.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
 
-    <joint name="imu_joint" type="fixed">
-        <parent link="base_link"/>
-        <child link="imu_link"/>
-        <origin xyz="0 0 0.075" rpy="0 0 0"/>
-    </joint>
 
-        <!-- ===================== GPS ===================== -->
-    <link name="navsat_link">
-        <visual>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <box size="0.05 0.05 0.05"/>
-            </geometry>
-            <material name="navsat_material">
-                <color rgba="0.0 0.8 0.0 1"/>
-            </material>
-        </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <box size="0.05 0.05 0.05"/>
-            </geometry>
-        </collision>
-        <inertial>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <mass value="0.1"/>
-            <inertia ixx="0.000042" ixy="0" ixz="0"
-                     iyy="0.000042" iyz="0"
-                     izz="0.000042"/>
-        </inertial>
-    </link>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://skidbot_description/meshes/BaseClear.dae" scale="1 1 1"/>
+      </geometry>
+      <material name="clear_guard">
+        <color rgba="0.6 0.6 0.7 0.5"/>
+      </material>
+    </visual>
+  </link>
 
-    <joint name="navsat_joint" type="fixed">
-        <parent link="base_link"/>
-        <child link="navsat_link"/>
-        <origin xyz="0 0 0.075" rpy="0 0 0"/>
-    </joint>
 
-        <!-- Lidar Link -->
-    <link name="lidar">
-        <visual>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <cylinder radius="0.1" length="0.13538975482266932"/>
-            </geometry>
-            <material name="lidar_material">
-                <color rgba="0 0 0 1"/>
-            </material>
-        </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <cylinder radius="0.1" length="0.13538975482266932"/>
-            </geometry>
-        </collision>
-        <inertial>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <mass value="1"/>
-            <inertia ixx="0.3333333333333333" ixy="0" ixz="0" iyy="0.5" iyz="0" izz="0.3333333333333333"/>
-        </inertial>
-    </link>
+  <link name="front_left_arm">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1.16"/>
+      <inertia ixx="0.006274" ixy="0.002744" ixz="0"
+               iyy="0.007678" iyz="0"
+               izz="0.009408"/>
+    </inertial>
+    <collision>
+      <origin xyz="0.055 0 -0.0305" rpy="0 0.505 0"/>
+      <geometry>
+        <box size="0.21 0.075 0.038"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://skidbot_description/meshes/ArmLeftMetal.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://skidbot_description/meshes/ArmLeftPlastic.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
+  </link>
 
-    <!-- Lidar Joint -->
-    <joint name="base_link_to_lidar" type="fixed">
-        <parent link="base_link"/>
-        <child link="lidar"/>
-        <origin xyz="0.2 0 0.1" rpy="0 0 0"/>
-    </joint>
+
+  <joint name="front_left_arm_joint" type="fixed">
+    <parent link="base_link"/>
+    <child  link="front_left_arm"/>
+    <origin xyz="0.263 0.238 0.029" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="front_left_wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="3.854"/>
+      <inertia ixx="0.009002" ixy="0.0006021" ixz="0"
+               iyy="0.01313"  iyz="0"
+               izz="0.009003"/>
+    </inertial>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="1.5707963267948966 0 0"/>
+      <geometry>
+        <cylinder radius="0.108" length="0.06"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 3.14159265359"/>
+      <geometry>
+        <mesh filename="package://skidbot_description/meshes/HubMotor.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 3.14159265359"/>
+      <geometry>
+        <mesh filename="package://skidbot_description/meshes/RubberWheel.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
+  </link>
+
+
+  <joint name="front_left_wheel_joint" type="continuous">
+    <parent link="front_left_arm"/>
+    <child  link="front_left_wheel"/>
+    <origin xyz="0.11861 0.095 -0.07453" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+
+  <link name="rear_right_arm">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1.16"/>
+      <inertia ixx="0.006274" ixy="0.002744" ixz="0"
+               iyy="0.007678" iyz="0"
+               izz="0.009408"/>
+    </inertial>
+    <collision>
+      <origin xyz="0.055 0 -0.0305" rpy="0 0.505 0"/>
+      <geometry>
+        <box size="0.21 0.075 0.038"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://skidbot_description/meshes/ArmLeftMetal.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://skidbot_description/meshes/ArmLeftPlastic.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
+  </link>
+
+
+  <joint name="rear_right_arm_joint" type="fixed">
+    <parent link="base_link"/>
+    <child  link="rear_right_arm"/>
+    <origin xyz="-0.263 -0.238 0.029" rpy="0 0 3.14159265359"/>
+  </joint>
+
+
+  <link name="rear_right_wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="3.854"/>
+      <inertia ixx="0.009002" ixy="0.0006021" ixz="0"
+               iyy="0.01313"  iyz="0"
+               izz="0.009003"/>
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.5707963267948966 0 0"/>
+      <geometry>
+        <cylinder radius="0.108" length="0.06"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://skidbot_description/meshes/HubMotor.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://skidbot_description/meshes/RubberWheel.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
+  </link>
+
+
+  <joint name="rear_right_wheel_joint" type="continuous">
+    <parent link="rear_right_arm"/>
+    <child  link="rear_right_wheel"/>
+    <origin xyz="0.11861 0.095 -0.07453" rpy="0 0 3.14159265359"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+
+  <link name="front_right_arm">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1.16"/>
+      <inertia ixx="0.006274" ixy="0.002744" ixz="0"
+               iyy="0.007678" iyz="0"
+               izz="0.009408"/>
+    </inertial>
+    <collision>
+      <origin xyz="0.055 0 -0.0305" rpy="0 0.505 0"/>
+      <geometry>
+        <box size="0.21 0.075 0.038"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 -0.017 0"/>
+      <geometry>
+        <mesh filename="package://skidbot_description/meshes/ArmRightMetal.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 -0.017 0"/>
+      <geometry>
+        <mesh filename="package://skidbot_description/meshes/ArmRightPlastic.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
+  </link>
+
+
+  <joint name="front_right_arm_joint" type="fixed">
+    <parent link="base_link"/>
+    <child  link="front_right_arm"/>
+    <origin xyz="0.263 -0.238 0.029" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="front_right_wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="3.854"/>
+      <inertia ixx="0.009002" ixy="0.0006021" ixz="0"
+               iyy="0.01313"  iyz="0"
+               izz="0.009003"/>
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.5707963267948966 0 0"/>
+      <geometry>
+        <cylinder radius="0.108" length="0.06"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://skidbot_description/meshes/HubMotor.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://skidbot_description/meshes/RubberWheel.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
+  </link>
+
+
+  <joint name="front_right_wheel_joint" type="continuous">
+    <parent link="front_right_arm"/>
+    <child  link="front_right_wheel"/>
+    <origin xyz="0.11861 -0.095 -0.07453" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+
+  <link name="rear_left_arm">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1.16"/>
+      <inertia ixx="0.006274" ixy="0.002744" ixz="0"
+               iyy="0.007678" iyz="0"
+               izz="0.009408"/>
+    </inertial>
+    <collision>
+      <origin xyz="0.055 0 -0.0305" rpy="0 0.505 0"/>
+      <geometry>
+        <box size="0.21 0.075 0.038"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 -0.017 0"/>
+      <geometry>
+        <mesh filename="package://skidbot_description/meshes/ArmRightMetal.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 -0.017 0"/>
+      <geometry>
+        <mesh filename="package://skidbot_description/meshes/ArmRightPlastic.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
+  </link>
+
+
+  <joint name="rear_left_arm_joint" type="fixed">
+    <parent link="base_link"/>
+    <child  link="rear_left_arm"/>
+    <origin xyz="-0.263 0.238 0.029" rpy="0 0 3.14159265359"/>
+  </joint>
+
+
+  <link name="rear_left_wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="3.854"/>
+      <inertia ixx="0.009002" ixy="0.0006021" ixz="0"
+               iyy="0.01313"  iyz="0"
+               izz="0.009003"/>
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.5707963267948966 0 0"/>
+      <geometry>
+        <cylinder radius="0.108" length="0.06"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 3.14159265359"/>
+      <geometry>
+        <mesh filename="package://skidbot_description/meshes/HubMotor.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 3.14159265359"/>
+      <geometry>
+        <mesh filename="package://skidbot_description/meshes/RubberWheel.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
+  </link>
+
+
+  <joint name="rear_left_wheel_joint" type="continuous">
+    <parent link="rear_left_arm"/>
+    <child  link="rear_left_wheel"/>
+    <origin xyz="0.11861 -0.095 -0.07453" rpy="0 0 3.14159265359"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+
+  <link name="imu_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.05 0.05 0.05"/>
+      </geometry>
+      <material name="imu_material">
+        <color rgba="0.0 0.8 0.0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.05 0.05 0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.1"/>
+      <inertia ixx="0.000042" ixy="0" ixz="0"
+               iyy="0.000042" iyz="0"
+               izz="0.000042"/>
+    </inertial>
+  </link>
+
+  <joint name="imu_joint" type="fixed">
+    <parent link="base_link"/>
+    <child  link="imu_link"/>
+    <origin xyz="0 0 0.075" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="navsat_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.05 0.05 0.05"/>
+      </geometry>
+      <material name="navsat_material">
+        <color rgba="0.0 0.8 0.0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.05 0.05 0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.1"/>
+      <inertia ixx="0.000042" ixy="0" ixz="0"
+               iyy="0.000042" iyz="0"
+               izz="0.000042"/>
+    </inertial>
+  </link>
+
+  <joint name="navsat_joint" type="fixed">
+    <parent link="base_link"/>
+    <child  link="navsat_link"/>
+    <origin xyz="0 0 0.075" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name="lidar">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.1" length="0.13538975482266932"/>
+      </geometry>
+      <material name="lidar_material">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.1" length="0.13538975482266932"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1.0"/>
+      <inertia ixx="0.3333333333333333" ixy="0" ixz="0"
+               iyy="0.5"               iyz="0"
+               izz="0.3333333333333333"/>
+    </inertial>
+  </link>
+
+  <joint name="base_link_to_lidar" type="fixed">
+    <parent link="base_link"/>
+    <child  link="lidar"/>
+    <origin xyz="0.2 0 0.1" rpy="0 0 0"/>
+  </joint>
 
 </robot>
