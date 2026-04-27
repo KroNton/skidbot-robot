@@ -26,14 +26,6 @@ def generate_launch_description():
         Command(['xacro ', robot_desc_path]),
         value_type=str
     )
-
-    joint_state_publisher = Node(
-        package='joint_state_publisher',
-        executable='joint_state_publisher',
-        name='joint_state_publisher',
-        output='screen'
-    )
-
     robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -55,7 +47,6 @@ def generate_launch_description():
 
     return LaunchDescription([
         DeclareLaunchArgument('rviz', default_value='true', description='Open RViz.'),
-        # joint_state_publisher,
         robot_state_publisher,
         rviz
     ])
