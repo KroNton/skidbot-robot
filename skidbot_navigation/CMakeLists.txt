@@ -26,6 +26,7 @@ install(DIRECTORY
   config
   launch
   behavior_tree
+  waypoints
   DESTINATION share/${PROJECT_NAME}
 )
 

@@ -7,7 +7,7 @@ import os
 import sys
 import tkinter as tk
 from tkinter import messagebox
-from skidbot_navigation.gps_utils import euler_from_quaternion
+from skidbot_navigation.utils.gps_utils import euler_from_quaternion
 
 
 class GpsGuiLogger(tk.Tk, Node):

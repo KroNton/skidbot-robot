@@ -12,7 +12,8 @@ def generate_launch_description():
     pkg = get_package_share_directory('skidbot_navigation')
 
     # ── Configuration file paths ──────────────────────────────────────────────
-    planner_yaml      = os.path.join(pkg, 'config', 'planner_server.yaml')
+    planner_yaml_astar        = os.path.join(pkg, 'config', 'planner_astar.yaml')
+    planner_yaml_hybrid_astar = os.path.join(pkg, 'config', 'planner_hybrid_astar.yaml')
     controller_yaml   = os.path.join(pkg, 'config', 'controller.yaml')
     bt_navigator_yaml = os.path.join(pkg, 'config', 'bt_navigator.yaml')
     recovery_yaml     = os.path.join(pkg, 'config', 'behavior_server.yaml')
@@ -33,7 +34,12 @@ def generate_launch_description():
     )
     planner_arg = LaunchConfiguration('planner')
 
-    # Resolve BT XML file at launch time based on the planner argument
+    # Select both the planner config YAML and the BT XML together so they stay in sync.
+    # "astar"        → planner_astar.yaml        (only GridBased loaded)  + astar BT
+    # "hybrid_astar" → planner_hybrid_astar.yaml (only HybridAStar loaded) + hybrid BT
+    planner_yaml = PythonExpression([
+        '"', planner_yaml_astar, '" if "', planner_arg, '" == "astar" else "', planner_yaml_hybrid_astar, '"'
+    ])
     bt_xml_file = PythonExpression([
         '"', bt_astar, '" if "', planner_arg, '" == "astar" else "', bt_hybrid_astar, '"'
     ])
@@ -46,7 +52,7 @@ def generate_launch_description():
         name='controller_server',
         output='screen',
         parameters=[controller_yaml, {'use_sim_time': use_sim_time}],
-        remappings=[('/odom', '/beetlebot_diff_drive_controller/odom')],
+        remappings=[('/odom', '/odometry/local')],
     )
 
     planner_node = Node(
@@ -77,7 +83,7 @@ def generate_launch_description():
                 'default_nav_to_pose_bt_xml': bt_xml_file,
             },
         ],
-        remappings=[('/odom', '/beetlebot_diff_drive_controller/odom')],
+        remappings=[('/odom', '/odometry/local')],
     )
 
     smoother_node = Node(
