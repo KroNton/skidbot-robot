@@ -63,8 +63,8 @@ local_costmap:
       rolling_window: true
       width: 4
       height: 4
-      robot_radius: 0.3
-      # footprint: '[[0.325, 0.325], [0.325, -0.325], [-0.325, -0.325], [-0.325, 0.325]]' # use this in case of robot is not circular
+      footprint: "[[0.4, 0.195], [-0.4, 0.195], [-0.4, -0.195], [0.4, -0.195]]"
+      footprint_padding: 0.01
       resolution: 0.05
       track_unknown_space: true
       plugins: ["obstacle_layer","inflation_layer"]
