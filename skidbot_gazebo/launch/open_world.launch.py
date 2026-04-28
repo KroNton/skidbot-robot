@@ -54,13 +54,14 @@ def generate_launch_description():
     )
 
     # Spawn arguments
-    declare_spawn_x = DeclareLaunchArgument('x', default_value='3.9681',
+    declare_spawn_x = DeclareLaunchArgument('x', default_value='3.3629',
                                             description='Model Spawn X Axis Value')
-    declare_spawn_y = DeclareLaunchArgument('y', default_value='-1.4947',
+    declare_spawn_y = DeclareLaunchArgument('y', default_value='-1.1511',
                                             description='Model Spawn Y Axis Value')
-    declare_spawn_z = DeclareLaunchArgument('z', default_value='3.0',
+    declare_spawn_z = DeclareLaunchArgument('z', default_value='1.5',
                                             description='Model Spawn Z Axis Value')
-
+    declare_spawn_yaw = DeclareLaunchArgument('yaw', default_value='0.8818',
+                                            description='Model Spawn yaw Value')
     # Spawn robot into Gazebo from robot_description topic
     gz_spawn_entity = Node(
         package='ros_gz_sim',
@@ -73,6 +74,7 @@ def generate_launch_description():
             '-x', LaunchConfiguration('x'),
             '-y', LaunchConfiguration('y'),
             '-z', LaunchConfiguration('z'),
+            '-yaw',LaunchConfiguration('yaw')
         ],
         output='screen',
     )
@@ -112,6 +114,7 @@ def generate_launch_description():
         declare_spawn_x,
         declare_spawn_y,
         declare_spawn_z,
+        declare_spawn_yaw,
         gz_sim,
         gz_spawn_entity,
         DeclareLaunchArgument('rviz', default_value='true', description='Open RViz.'),

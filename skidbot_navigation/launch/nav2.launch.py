@@ -94,6 +94,14 @@ def generate_launch_description():
         parameters=[smoother_yaml, {'use_sim_time': use_sim_time}],
     )
 
+    waypoint_follower_node = Node(
+        package='nav2_waypoint_follower',
+        executable='waypoint_follower',
+        name='waypoint_follower',
+        output='screen',
+        parameters=[{'use_sim_time': use_sim_time}],
+    )
+
     lifecycle_manager_node = Node(
         package='nav2_lifecycle_manager',
         executable='lifecycle_manager',
@@ -108,6 +116,7 @@ def generate_launch_description():
                 'behavior_server',
                 'smoother_server',
                 'bt_navigator',
+                'waypoint_follower',
             ]},
         ],
     )
@@ -119,5 +128,6 @@ def generate_launch_description():
         nav2_behaviors_node,
         bt_node,
         smoother_node,
+        waypoint_follower_node,
         lifecycle_manager_node,
     ])
