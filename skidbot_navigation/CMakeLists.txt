@@ -14,11 +14,21 @@ ament_python_install_package(${PROJECT_NAME})
 
 install(PROGRAMS
   skidbot_navigation/twist_to_twist_stamped.py
-  skidbot_navigation/planner_benchmark.py
   skidbot_navigation/gps_waypoint_logger.py
   skidbot_navigation/interactive_waypoint_follower.py
   skidbot_navigation/logged_waypoint_follower.py
-  skidbot_navigation/planner_benchmark.py
+  skidbot_navigation/planner_benchmark_recorder.py
+  skidbot_navigation/planner_path_recorder.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+# Install without .py so 'ros2 run' works without the extension
+install(PROGRAMS skidbot_navigation/planner_benchmark_recorder.py
+  RENAME planner_benchmark_recorder
+  DESTINATION lib/${PROJECT_NAME}
+)
+install(PROGRAMS skidbot_navigation/planner_path_recorder.py
+  RENAME planner_path_recorder
   DESTINATION lib/${PROJECT_NAME}
 )
 

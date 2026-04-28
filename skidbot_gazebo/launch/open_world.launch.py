@@ -60,7 +60,7 @@ def generate_launch_description():
                                             description='Model Spawn Y Axis Value')
     declare_spawn_z = DeclareLaunchArgument('z', default_value='1.5',
                                             description='Model Spawn Z Axis Value')
-    declare_spawn_yaw = DeclareLaunchArgument('yaw', default_value='0.8818',
+    declare_spawn_yaw = DeclareLaunchArgument('yaw', default_value='-2.155',
                                             description='Model Spawn yaw Value')
     # Spawn robot into Gazebo from robot_description topic
     gz_spawn_entity = Node(
