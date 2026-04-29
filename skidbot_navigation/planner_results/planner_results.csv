@@ -1,0 +1,7 @@
+timestamp,planner,scenario,start_x,start_y,goal_x,goal_y,straight_line_dist_m,planning_time_ms,path_length_m,path_efficiency,num_waypoints,avg_heading_change_rad,max_heading_change_rad,num_recoveries,success,total_nav_time_s
+2026-04-29T01:49:06,hybrid_astar,open_world,5.134,7.8867,5.0151,7.8382,0.1284,2.1,0.2647,0.485,4,0.000637,0.000637,0,True,0.28
+2026-04-29T01:52:36,astar,open_world,4.7481,8.5163,5.0,7.8,0.7593,3.3,0.3121,2.4326,6,0.589049,0.785398,0,True,0.58
+2026-04-29T02:10:08,hybrid_astar,open_world,4.5878,8.631,5.0366,7.8092,0.9363,4.8,0.3708,2.5252,6,0.824548,2.993486,0,True,1.02
+2026-04-29T02:16:51,astar,open_world,4.826,13.9958,5.0,7.8,6.1983,2.7,0.2914,21.2691,6,0.19635,0.785398,3,False,1.02
+2026-04-29T02:16:55,astar,open_world,4.8102,14.266,5.2,7.95,6.328,1.9,0.3414,18.5344,7,0.628319,0.785398,0,True,0.85
+2026-04-29T02:17:15,astar,open_world,4.807,14.3222,5.0,7.8,6.5251,2.1,0.2914,22.3906,6,0.19635,0.785398,0,True,0.02
