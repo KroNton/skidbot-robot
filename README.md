@@ -1,6 +1,172 @@
 # Skidbot
 
-ROS 2 Jazzy simulation and navigation stack for a custom 4-wheel skid-steer mobile robot, with switchable A\* and Hybrid A\* global path planners and a full benchmarking pipeline.
+ROS 2 Jazzy Gazebo simulation of a 4-wheel skid-steer robot that fuses wheel odometry, IMU, and GPS, then benchmarks Nav2 A\* against Hybrid A\* in an outdoor world.
+
+<!-- TODO: Gazebo outdoor simulation GIF -->
+<!-- TODO: RViz Nav2 screenshot -->
+
+This repository is the simulation behind the paper: K. F. Wassef, "Implementation and Evaluation of Cost-Aware Hybrid-A\* Path Planning for a Skid-Steer Mobile Robot in Indoor Environments," Dept. of Mechatronics Engineering, Ain Shams University, 2026.
+
+## What this demonstrates
+
+- ROS 2 Jazzy workspace with five `ament_cmake` packages and Python nodes
+- URDF/Xacro modeling, meshes, and Gazebo Harmonic sensors (2D LiDAR, IMU, NavSat)
+- `gz-sim` worlds, `ros_gz_bridge`, and `gz_ros2_control`
+- `ros2_control` diff-drive for a 4-wheel skid-steer
+- `robot_localization` dual EKF plus `navsat_transform` (wheel odometry, IMU, GPS)
+- Nav2 SMAC 2D A\*, SMAC Hybrid A\* (Reeds-Shepp), Regulated Pure Pursuit, behavior trees, costmaps, and a lifecycle manager
+- Planner benchmark logging to CSV (planning time, path length, recoveries, trajectory)
+
+## Architecture
+
+The running stack is four launch files. Optional Mapviz and waypoint tools are listed under the diagram.
+
+```mermaid
+flowchart LR
+  subgraph gazebo ["skidbot_gazebo"]
+    GZ["gz-sim<br/>open_world, home_world, maze_world"]
+    SP["ros_gz_sim create<br/>skidbot_spawn"]
+    BR["ros_gz_bridge<br/>parameter_bridge"]
+  end
+
+  subgraph model ["skidbot_description"]
+    RSP["robot_state_publisher"]
+    SENS["Gazebo sensors<br/>/scan, /imu, /navsat"]
+  end
+
+  subgraph control ["skidbot_controller"]
+    CM["gz_ros2_control<br/>controller_manager"]
+    JSB["joint_state_broadcaster"]
+    DD["diff_drive_controller<br/>skidbot_controller"]
+    REL["twist_to_twist_stamped"]
+  end
+
+  subgraph loc ["skidbot_localization"]
+    E1["ekf_filter_node_odom<br/>odometry/local"]
+    E2["ekf_filter_node_map<br/>odometry/global"]
+    NS["navsat_transform"]
+  end
+
+  subgraph nav ["skidbot_navigation"]
+    PL["planner_server<br/>SmacPlanner2D or SmacPlannerHybrid"]
+    CT["controller_server<br/>Regulated Pure Pursuit"]
+    BT["bt_navigator"]
+    BH["behavior_server<br/>spin, backup, wait"]
+    SM["smoother_server<br/>Savitzky-Golay"]
+    WP["waypoint_follower"]
+    LC["lifecycle_manager"]
+    REC["planner_benchmark_recorder<br/>planner_path_recorder"]
+  end
+
+  GZ --> SENS --> BR
+  SP --> RSP
+  CM --> JSB
+  CM --> DD
+  DD -->|"/skidbot_controller/odom"| E1
+  BR -->|"/imu"| E1
+  BR -->|"/navsat"| NS
+  NS -->|"odometry/gps"| E2
+  DD -->|"/skidbot_controller/odom"| E2
+  BR -->|"/imu"| E2
+  E1 -->|"odometry/local"| CT
+  E2 -->|"map to odom"| PL
+  LC --> PL
+  LC --> CT
+  LC --> BH
+  LC --> SM
+  LC --> BT
+  LC --> WP
+  BT --> PL
+  BT --> CT
+  CT -->|"/cmd_vel"| REL
+  REL -->|"/skidbot_controller/cmd_vel"| DD
+  PL --> REC
+```
+
+`open_world.launch.py` starts gz-sim, spawns the robot from the xacro, runs `robot_state_publisher`, the bridge, and RViz. The bridge carries `/clock`, `/odom`, `/joint_states`, `/tf`, `/tf_static`, `/imu`, `/scan`, and `/navsat`. `gz_ros2_control` hosts `controller_manager` inside the simulation. The odom EKF fuses `/skidbot_controller/odom` with `/imu` and publishes `odometry/local`. The map EKF adds `odometry/gps` from `navsat_transform` and publishes `odometry/global`. Nav2's controller reads `odometry/local`. `planner:=astar` loads `SmacPlanner2D`; `planner:=hybrid_astar` loads `SmacPlannerHybrid`.
+
+Also in the repo, launched separately: `mapviz`, `initialize_origin.py`, and a static `map` to `origin` transform (`mapviz.launch.py`); `gps_waypoint_logger`, `gps_wp_commander` (`interactive_waypoint_follower.py`), and `logged_waypoint_follower.py`.
+
+## Simulation status
+
+| Piece | Package | State in this repo |
+|---|---|---|
+| Outdoor open world (Rubicon terrain, WGS84 datum) | `skidbot_gazebo` | Launchable; used for the checked-in planner runs |
+| Indoor home world (local apartment model) | `skidbot_gazebo` | Launchable |
+| Maze world (Gazebo Fuel maze) | `skidbot_gazebo` | Launchable |
+| 4-wheel skid-steer URDF, meshes, LiDAR / IMU / NavSat | `skidbot_description` | In the model |
+| Diff-drive via `gz_ros2_control` | `skidbot_controller` | Simulated `GazeboSimSystem` |
+| Dual EKF and GPS conversion | `skidbot_localization` | Wheel odometry + IMU + NavSat |
+| Switchable A\* and Hybrid A\* Nav2 stack | `skidbot_navigation` | `planner:=astar` or `planner:=hybrid_astar` |
+| Benchmark CSVs and figures | `skidbot_navigation/planner_results` | Open-world runs checked in |
+
+## Quick start
+
+ROS 2 Jazzy on Ubuntu 24.04. Gazebo and RViz open a GUI, so use a machine with a display. The first `open_world` and `maze_world` launches download a model from Gazebo Fuel.
+
+```bash
+source /opt/ros/jazzy/setup.bash
+sudo rosdep init   # once per machine
+rosdep update
+mkdir -p ~/skidbot_ws/src
+git clone https://github.com/KroNton/skidbot-robot.git ~/skidbot_ws/src/skidbot-robot
+cd ~/skidbot_ws
+rosdep install --from-paths src --ignore-src -y
+sudo apt install -y \
+  ros-jazzy-nav2-bringup \
+  ros-jazzy-nav2-smac-planner \
+  ros-jazzy-nav2-regulated-pure-pursuit-controller \
+  ros-jazzy-robot-localization \
+  ros-jazzy-ros-gz-bridge \
+  ros-jazzy-ros-gz-sim \
+  ros-jazzy-ros2-control \
+  ros-jazzy-gz-ros2-control \
+  ros-jazzy-diff-drive-controller \
+  ros-jazzy-joint-state-broadcaster \
+  ros-jazzy-robot-state-publisher \
+  ros-jazzy-mapviz \
+  ros-jazzy-mapviz-plugins \
+  ros-jazzy-swri-transform-util \
+  ros-jazzy-xacro \
+  ros-jazzy-rviz2
+colcon build --symlink-install
+source install/setup.bash
+```
+
+Source the workspace in every terminal, then start the stack in this order:
+
+```bash
+# Terminal 1 — outdoor world used for the benchmarks
+ros2 launch skidbot_gazebo open_world.launch.py
+
+# Terminal 2 — diff-drive controller and Twist relay
+ros2 launch skidbot_controller controller.launch.py
+
+# Terminal 3 — dual EKF and navsat_transform
+ros2 launch skidbot_localization localization.launch.py
+
+# Terminal 4 — Nav2 with Hybrid A* (planner:=astar selects SMAC 2D A*)
+ros2 launch skidbot_navigation nav2.launch.py planner:=hybrid_astar
+```
+
+Other worlds: `ros2 launch skidbot_gazebo home_world.launch.py` and `ros2 launch skidbot_gazebo maze_world.launch.py`. Send a goal with the RViz **2D Goal Pose** tool. Optional GPS view: `ros2 launch skidbot_localization mapviz.launch.py`. Record a run while navigating: `ros2 run skidbot_navigation planner_benchmark_recorder`.
+
+## Results
+
+Checked-in open-world runs in [`skidbot_navigation/planner_results/planner_results.csv`](skidbot_navigation/planner_results/planner_results.csv). Planned paths are in `plan_paths.csv` and executed trajectories in `robot_trajectories.csv`.
+
+| Planner | Runs | Success | Recoveries | Mean planning time |
+|---|---|---|---|---|
+| Hybrid A\* (`SmacPlannerHybrid`) | 2 | 2/2 | 0 | 3.5 ms |
+| A\* (`SmacPlanner2D`) | 4 | 3/4 | 3 | 2.5 ms |
+
+The unsuccessful A\* run recorded 3 recoveries and then aborted. Hybrid A\* completed both runs with no recoveries. Figures from those logs:
+
+![Planned path comparison](skidbot_navigation/planner_results/figures/path_comparison.png)
+
+![Metric comparison](skidbot_navigation/planner_results/figures/metric_comparison.png)
+
+---
 
 ## Overview
 
